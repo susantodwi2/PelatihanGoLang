@@ -1,0 +1,38 @@
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+func MunculSekali(angka string) []int {
+	numberMap := make(map[int]int)
+	var uniqueNumbers []int
+
+	numbers := strings.Fields(angka)
+	for _, numStr := range numbers {
+		num, err := strconv.Atoi(numStr)
+		if err == nil {
+			numberMap[num]++
+		}
+	}
+
+	for num, count := range numberMap {
+		if count == 1 {
+			uniqueNumbers = append(uniqueNumbers, num)
+		}
+	}
+
+	return uniqueNumbers
+}
+
+func main() {
+	var angka string
+	fmt.Print("Masukkan kumpulan angka (pisahkan dengan spasi): ")
+	fmt.Scan(&angka)
+
+	fmt.Println("Angka-angka yang hanya muncul satu kali:")
+	fmt.Println(MunculSekali(angka))
+
+}
