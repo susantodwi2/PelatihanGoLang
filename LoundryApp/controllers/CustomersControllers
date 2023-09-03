@@ -1,0 +1,69 @@
+package controllers
+
+import (
+	"net/http"
+
+	"LoundryApp/models"
+
+	"github.com/gin-gonic/gin"
+)
+
+// TambahCustomer digunakan untuk menambah pelanggan ke database
+func TambahCustomer(c *gin.Context) {
+	var customer models.Customers
+	if err := c.ShouldBindJSON(&customer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Simpan pelanggan ke database
+	if err := models.DB.Create(&customer).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
+}
+
+// UpdateCustomer digunakan untuk mengupdate pelanggan di database berdasarkan ID
+func UpdateCustomer(c *gin.Context) {
+	id := c.Param("id")
+	var customer models.Customers
+
+	if err := models.DB.First(&customer, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Pelanggan tidak ditemukan"})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&customer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Simpan perubahan pelanggan ke database
+	if err := models.DB.Save(&customer).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, customer)
+}
+
+// HapusCustomer digunakan untuk menghapus pelanggan dari database berdasarkan ID
+func HapusCustomer(c *gin.Context) {
+	id := c.Param("id")
+	var customer models.Customers
+
+	if err := models.DB.First(&customer, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Pelanggan tidak ditemukan"})
+		return
+	}
+
+	// Hapus pelanggan dari database
+	if err := models.DB.Delete(&customer).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Pelanggan berhasil dihapus"})
+}
