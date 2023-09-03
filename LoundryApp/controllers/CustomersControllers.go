@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"LoundryApp/models/"
 	"net/http"
 	"strconv"
 
