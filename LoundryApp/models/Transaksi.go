@@ -12,3 +12,11 @@ type Transaction struct {
 	PerolehanPoint   float64   `json:"perolehan_point"`
 	TanggalTransaksi time.Time `json:"tanggal_transaksi"`
 }
+
+// CreateTransaction digunakan untuk menyimpan transaksi ke database
+func CreateTransaction(transaction *Transaction) error {
+	if err := DB.Create(transaction).Error; err != nil {
+		return err // Mengembalikan error jika terjadi kesalahan saat menyimpan transaksi
+	}
+	return nil
+}
